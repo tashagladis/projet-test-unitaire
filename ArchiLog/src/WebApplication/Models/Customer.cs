@@ -7,18 +7,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication.Models
 {
-    public class Customer : ModelBase 
+    public class Customer : ModelBase
     {
 
         public Customer(
-            string email,    
-            string phone, 
+            string email,
+            string phone,
             string lastname,
             string firstname,
             string genre,
-            DateTime birthday, 
-            string address, 
-            string zipCode, 
+            DateTime birthday,
+            string address,
+            string zipCode,
             string city)
         {
             Email = email;
@@ -36,7 +36,7 @@ namespace WebApplication.Models
         //public int ID { get; set; }
         // rendre obligatoire l'élément en question
         // errormessage : pour personnaliser le message d'erreur
-       // [Required(ErrorMessage = "L'email est obligatoire.")]
+        // [Required(ErrorMessage = "L'email est obligatoire.")]
         [NotJson]
         public string Email { get; set; }
         [Required]
@@ -64,7 +64,7 @@ namespace WebApplication.Models
             yield return this.Birthday;
             yield return this.Address;
             yield return this.ZipCode;
-            yield return this.City;             
+            yield return this.City;
         }
     }
 }

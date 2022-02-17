@@ -9,14 +9,9 @@ namespace WebApplication.Controllers
     [ApiController]
     public class PizzaController : ControllerBaseAPI<Pizza, EatDbContext>
     {
-
-
         public PizzaController(EatDbContext context) : base(context)
         {
 
         }
-
-
-
     }
 }

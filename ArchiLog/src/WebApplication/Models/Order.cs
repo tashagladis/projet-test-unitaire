@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using System.Collections.Generic;
-using WebApplication.Models;
 
 namespace WebApplication.Models
 {
@@ -24,7 +23,7 @@ namespace WebApplication.Models
             {
                 return Result.Failure<Order>("Le champ Pizza ne doit pas etre null");
             }
-            if(pizza.Length == 0)
+            if (pizza.Length == 0)
             {
                 return Result.Failure<Order>("Il faut au moins une pizza afin de créer la commande");
             }

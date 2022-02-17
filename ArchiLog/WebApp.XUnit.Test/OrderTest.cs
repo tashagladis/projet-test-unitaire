@@ -18,7 +18,7 @@ namespace WebApp.XUnit.Test
             var pizza = new[] { pizza1, pizza2 };
             var customer = new Customer
             (
-                 
+
                  "AliAhmadr@yahoo.fr",
                  "65421895154",
                  "Fouret",
@@ -59,7 +59,7 @@ namespace WebApp.XUnit.Test
             //given
             var customer = new Customer
             (
-                
+
                  "AliAhmadr@yahoo.fr",
                  "65421895154",
                  "Fouret",
@@ -85,7 +85,7 @@ namespace WebApp.XUnit.Test
             //given
             var customer = new Customer
             (
-                 
+
                  "AliAhmadr@yahoo.fr",
                  "65421895154",
                  "Fouret",
