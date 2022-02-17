@@ -1,5 +1,6 @@
 ﻿using APILibrary.Core.Attributs;
 using APILibrary.Core.Models;
+using CSharpFunctionalExtensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -66,5 +67,11 @@ namespace WebApplication.Models
             yield return this.ZipCode;
             yield return this.City;
         }
+
+        //public static Result<Customer> Create()
+        //{
+            
+        //    return new Customer();
+        //}
     }
 }

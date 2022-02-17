@@ -1,4 +1,5 @@
 ﻿using APILibrary.Core.Models;
+using CSharpFunctionalExtensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -34,5 +35,10 @@ namespace WebApplication.Models
             yield return this.DateCreation;
 
         }
+
+        //public static Result<Pizza> Create()
+        //{
+        //    return new Pizza();
+        //}
     }
 }
