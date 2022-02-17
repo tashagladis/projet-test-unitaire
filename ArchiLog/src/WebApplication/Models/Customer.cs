@@ -73,15 +73,27 @@ namespace WebApplication.Models
             string city)
         {
            
-            Guard.Against.NullOrEmpty(email, nameof(email));
-            Guard.Against.NullOrEmpty(phone, nameof(phone));
-            Guard.Against.NullOrEmpty(lastname, nameof(lastname));
-            Guard.Against.NullOrEmpty(firstname, nameof(firstname));
-            Guard.Against.NullOrEmpty(genre, nameof(genre));
-            Guard.Against.OutOfSQLDateRange(birthday, nameof(birthday));
-            Guard.Against.NullOrEmpty(address, nameof(address));
-            Guard.Against.NullOrEmpty(zipCode, nameof(zipCode));
+            //Guard.Against.NullOrEmpty(email, nameof(email));
+            //Guard.Against.NullOrEmpty(phone, nameof(phone));
+            //Guard.Against.NullOrEmpty(lastname, nameof(lastname));
+            //Guard.Against.NullOrEmpty(firstname, nameof(firstname));
+            //Guard.Against.NullOrEmpty(genre, nameof(genre));
+            //Guard.Against.OutOfSQLDateRange(birthday, nameof(birthday));
+            //Guard.Against.NullOrEmpty(address, nameof(address));
+            //Guard.Against.NullOrEmpty(zipCode, nameof(zipCode));
             Guard.Against.NullOrEmpty(city, nameof(city));
+
+            if ((email == "") || (email == null)) return Result.Failure<Customer>("Le champ Email est requis");
+            if ((phone == "") || (phone == null)) return Result.Failure<Customer>("Le champ Phone est requis");
+            if ((lastname == "") || (lastname == null)) return Result.Failure<Customer>("Le champ Lastname est requis");
+            if ((firstname == "") || (firstname == null)) return Result.Failure<Customer>("Le champ Firstname est requis");
+            if ((genre == "") || (genre == null)) return Result.Failure<Customer>("Le champ Genre est requis");
+            if ((address == "") || (address == null)) return Result.Failure<Customer>("Le champ Address est requis");
+            if ((zipCode == "") || (zipCode == null)) return Result.Failure<Customer>("Le champ ZipCode est requis");
+            if ((city == "") || (city == null)) return Result.Failure<Customer>("Le champ City est requis");
+            if (birthday == null) return Result.Failure<Customer>("Le champ Birthday est requis");
+           
+            
 
 
             return Result.Success(new Customer(email, phone, lastname, firstname, genre, birthday, address, zipCode, city));
