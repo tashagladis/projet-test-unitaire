@@ -1,5 +1,6 @@
 ﻿using APILibrary.Core.Attributs;
 using APILibrary.Core.Models;
+using Ardalis.GuardClauses;
 using CSharpFunctionalExtensions;
 using System;
 using System.Collections.Generic;
@@ -11,16 +12,7 @@ namespace WebApplication.Models
     public class Customer : ModelBase
     {
 
-        public Customer(
-            string email,
-            string phone,
-            string lastname,
-            string firstname,
-            string genre,
-            DateTime birthday,
-            string address,
-            string zipCode,
-            string city)
+        public Customer(string email,string phone,string lastname,string firstname,string genre,DateTime birthday,string address,string zipCode,string city)
         {
             Email = email;
             Phone = phone;
@@ -55,6 +47,7 @@ namespace WebApplication.Models
         public string ZipCode { get; set; }
         public string City { get; set; }
 
+
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return this.Email;
@@ -68,10 +61,30 @@ namespace WebApplication.Models
             yield return this.City;
         }
 
-        //public static Result<Customer> Create()
-        //{
-            
-        //    return new Customer();
-        //}
+        public static Result<Customer> Create(
+            string email,
+            string phone,
+            string lastname,
+            string firstname,
+            string genre,
+            DateTime birthday,
+            string address,
+            string zipCode,
+            string city)
+        {
+           
+            Guard.Against.NullOrEmpty(email, nameof(email));
+            Guard.Against.NullOrEmpty(phone, nameof(phone));
+            Guard.Against.NullOrEmpty(lastname, nameof(lastname));
+            Guard.Against.NullOrEmpty(firstname, nameof(firstname));
+            Guard.Against.NullOrEmpty(genre, nameof(genre));
+            Guard.Against.OutOfSQLDateRange(birthday, nameof(birthday));
+            Guard.Against.NullOrEmpty(address, nameof(address));
+            Guard.Against.NullOrEmpty(zipCode, nameof(zipCode));
+            Guard.Against.NullOrEmpty(city, nameof(city));
+
+
+            return Result.Success(new Customer(email, phone, lastname, firstname, genre, birthday, address, zipCode, city));
+        }
     }
 }
