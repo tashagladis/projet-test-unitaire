@@ -1,4 +1,5 @@
 ﻿using APILibrary.Core.Models;
+using Ardalis.GuardClauses;
 using CSharpFunctionalExtensions;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace WebApplication.Models
             Name = name;
             Price = price;
             Topping = topping;
-            DateCreation = dateCreation;
+            DateCreation = DateTime.Now;
         }
 
 
@@ -36,9 +37,16 @@ namespace WebApplication.Models
 
         }
 
-        //public static Result<Pizza> Create()
-        //{
-        //    return new Pizza();
-        //}
+        public static Result<Pizza> Create(string name, decimal price, string topping, DateTime dateCreation)
+        {
+
+            Guard.Against.NullOrEmpty(name, nameof(name));
+            Guard.Against.Negative(price, nameof(price));
+            Guard.Against.NullOrEmpty(topping, nameof(topping));
+            Guard.Against.OutOfSQLDateRange(dateCreation, nameof(dateCreation));           
+
+
+            return Result.Success(new Pizza(name, price, topping, dateCreation));
+        }
     }
 }

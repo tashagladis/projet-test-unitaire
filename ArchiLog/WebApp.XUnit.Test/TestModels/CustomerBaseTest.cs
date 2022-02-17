@@ -7,7 +7,6 @@ namespace WebApp.XUnit.Test.TestModels
     [Trait("Création d'un Customer", "")]
     public class CustomerBaseTest
     {
-
         [Fact(DisplayName = "je peux créer un customer si tous les champs sont renseignés")]
         public void on_peut_creer_un_customer_avec_infos_correctes()
         {
@@ -26,6 +25,5 @@ namespace WebApp.XUnit.Test.TestModels
             Assert.NotNull(result.Value.ZipCode);
             Assert.NotNull(result.Value.City);
         }
-
     }
 }
