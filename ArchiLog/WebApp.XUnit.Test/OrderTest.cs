@@ -13,21 +13,22 @@ namespace WebApp.XUnit.Test
         public void Je_peux_creer_une_commande()
         {
             //given
-            var pizza1 = new Pizza { DateCreation = DateTime.Now, ID = 1, Name = "test", Price = 50, Topping = "" };
-            var pizza2 = new Pizza { DateCreation = DateTime.Now, ID = 1, Name = "test", Price = 50, Topping = "" };
+            var pizza1 = new Pizza("pizza1", 50, "test", DateTime.Now);
+            var pizza2 = new Pizza("pizza2", 50, "test", DateTime.Now.AddDays(1));
             var pizza = new[] { pizza1, pizza2 };
             var customer = new Customer
-            {
-                Email = "AliAhmadr@yahoo.fr",
-                Phone = "65421895154",
-                Lastname = "Fouret",
-                Firstname = "Jeanne",
-                Genre = "Autres",
-                Address = "2 bd rue jean miche",
-                ZipCode = "6854",
-                City = "Limoges",
-                ID = 2
-            };
+            (
+                 
+                 "AliAhmadr@yahoo.fr",
+                 "65421895154",
+                 "Fouret",
+                 "Jeanne",
+                 "Autres",
+                 DateTime.Now,
+                 "2 bd rue jean miche",
+                 "6854",
+                 "Limoges"
+            );
 
             //when
             var result = Order.Create(customer, pizza);
@@ -41,8 +42,8 @@ namespace WebApp.XUnit.Test
         public void Je_ne_peux_pas_creer_une_commande_sans_customer()
         {
             //given
-            var pizza1 = new Pizza { DateCreation = DateTime.Now, ID = 1, Name = "test", Price = 50, Topping = "" };
-            var pizza2 = new Pizza { DateCreation = DateTime.Now, ID = 1, Name = "test", Price = 50, Topping = "" };
+            var pizza1 = new Pizza("pizza1", 50, "test", DateTime.Now);
+            var pizza2 = new Pizza("pizza2", 50, "test", DateTime.Now.AddDays(1));
             var pizza = new[] { pizza1, pizza2 };
             //when
             var result = Order.Create(null, pizza);
@@ -57,17 +58,18 @@ namespace WebApp.XUnit.Test
         {
             //given
             var customer = new Customer
-            {
-                Email = "AliAhmadr@yahoo.fr",
-                Phone = "65421895154",
-                Lastname = "Fouret",
-                Firstname = "Jeanne",
-                Genre = "Autres",
-                Address = "2 bd rue jean miche",
-                ZipCode = "6854",
-                City = "Limoges",
-                ID = 2
-            };
+            (
+                
+                 "AliAhmadr@yahoo.fr",
+                 "65421895154",
+                 "Fouret",
+                 "Jeanne",
+                 "Autres",
+                 DateTime.Now,
+                 "2 bd rue jean miche",
+                 "6854",
+                 "Limoges"
+            );
 
             //when
             var result = Order.Create(customer, null);
@@ -82,17 +84,18 @@ namespace WebApp.XUnit.Test
         {
             //given
             var customer = new Customer
-            {
-                Email = "AliAhmadr@yahoo.fr",
-                Phone = "65421895154",
-                Lastname = "Fouret",
-                Firstname = "Jeanne",
-                Genre = "Autres",
-                Address = "2 bd rue jean miche",
-                ZipCode = "6854",
-                City = "Limoges",
-                ID = 2
-            };
+            (
+                 
+                 "AliAhmadr@yahoo.fr",
+                 "65421895154",
+                 "Fouret",
+                 "Jeanne",
+                 "Autres",
+                 DateTime.Now,
+                 "2 bd rue jean miche",
+                 "6854",
+                 "Limoges"
+            );
 
             //une commande avec 0 pizza => tableau de pizza vide 
             var pizza = Array.Empty<Pizza>();
