@@ -51,19 +51,19 @@ namespace WebApp.XUnit.Test
         public async Task TestPut()
         {
             CustomerMock customer = new CustomerMock
-            {
-                Email = "AliAhmadr@yahoo.fr",
-                Phone = "65421895154",
-                Lastname = "Fouret",
-                Firstname = "Jeanne",
-                Genre = "Autres",
-                Address = null,
-                ZipCode = "6854",
-                City = "Limoges",
-                ID = 2
-            };
+            (
+                "Email AliAhmadr@yahoo.fr",
+                "65421895154",
+                "Fouret",
+                "Jeanne",
+                "Autres",
+                DateTime.Now,
+                null,
+                "6854",
+                "Limoges"           
+            );
 
-            var actionResult = await _controller.UpdateItem(2, customer);
+            var actionResult = await _controller.UpdateItem(customer.ID = 2, customer);
             var result = actionResult.Result as ObjectResult;
 
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
@@ -74,17 +74,18 @@ namespace WebApp.XUnit.Test
         public async Task TestCreate()
         {
             CustomerMock customer = new CustomerMock
-            {
-                Email = "AliAhmadr@yahoo.fr",
-                Phone = "65421895154",
-                Lastname = "Maria",
-                Firstname = "Julia",
-                Genre = "Autres",
-                Address = null,
-                ZipCode = "6854",
-                City = "Limoges"
+            (
+                "AliAhmadr@yahoo.fr",
+                "65421895154",
+                "Maria",
+                "Julia",
+                "Autres",
+                DateTime.Now,
+                null,
+                "6854",
+                "Limoges"
 
-            };
+            );
 
             var actionResult = await _controller.CreateItem(customer);
             var result = actionResult.Result as ObjectResult;

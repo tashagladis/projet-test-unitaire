@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using WebApp.XUnit.Test.Mock.Models;
 using WebApplication.Data;
 
@@ -18,52 +19,56 @@ namespace WebApp.XUnit.Test.Mock
             if (withData)
             {
                 db.Customers.Add(new CustomerMock
-                {
-                    Email = "AliAhmadr@yahoo.fr",
-                    Phone = "65421895154",
-                    Lastname = "Charles",
-                    Firstname = "Clementine",
-                    Genre = "Homme",
-                    Address = null,
-                    ZipCode = "6854",
-                    City = "Limoges",
-                });
+                (
+                    "AliAhmadr@yahoo.fr",
+                    "65421895154",
+                    "Charles",
+                    "Clementine",
+                    "Homme",
+                    DateTime.Now,
+                    null,
+                    "6854",
+                    "Limoges"
+                ));
 
                 db.Customers.Add(new CustomerMock
-                {
-                    Email = "AliAhmadr@yahoo.fr",
-                    Phone = "65421895154",
-                    Lastname = "Charles",
-                    Firstname = "Zan",
-                    Genre = "Homme",
-                    Address = null,
-                    ZipCode = "6854",
-                    City = "Limoges",
-                });
+                (
+                    "AliAhmadr@yahoo.fr",
+                    "65421895154",
+                    "Charles",
+                    "Zan",
+                    "Homme",
+                    DateTime.Now,
+                    null,
+                    "6854",
+                    "Limoges"
+                ));
 
                 db.Customers.Add(new CustomerMock
-                {
-                    Email = "AliAhmadr@yahoo.fr",
-                    Phone = "65421895154",
-                    Lastname = "Kaly",
-                    Firstname = "Moli",
-                    Genre = "Femme",
-                    Address = null,
-                    ZipCode = "6854",
-                    City = "Limoges",
-                });
+                (
+                     "AliAhmadr@yahoo.fr",
+                     "65421895154",
+                     "Kaly",
+                     "Moli",
+                     "Femme",
+                     DateTime.Now,
+                     null,
+                     "6854",
+                     "Limoges"
+               ));
 
                 db.Customers.Add(new CustomerMock
-                {
-                    Email = "AliAhmadr@yahoo.fr",
-                    Phone = "65421895154",
-                    Lastname = "Charles",
-                    Firstname = "Jeep",
-                    Genre = "Femme",
-                    Address = null,
-                    ZipCode = "6854",
-                    City = "Limoges",
-                });
+                (
+                    "AliAhmadr@yahoo.fr",
+                    "65421895154",
+                    "Charles",
+                    "Jeep",
+                    "Femme",
+                    DateTime.Now,
+                    null,
+                    "6854",
+                    "Limoges"
+                ));
 
 
                 db.SaveChanges();
