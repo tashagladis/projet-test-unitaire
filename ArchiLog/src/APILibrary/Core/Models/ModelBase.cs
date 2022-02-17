@@ -1,11 +1,11 @@
-﻿using System;
+﻿using CSharpFunctionalExtensions;
 using System.Collections.Generic;
-using System.Text;
 
 namespace APILibrary.Core.Models
 {
-    public class ModelBase
+    public abstract class ModelBase : ValueObject
     {
+        protected abstract override IEnumerable<object> GetEqualityComponents();
         public int ID { get; set; }
     }
 }
