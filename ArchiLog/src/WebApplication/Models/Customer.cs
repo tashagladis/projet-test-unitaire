@@ -11,16 +11,7 @@ namespace WebApplication.Models
     public class Customer : ModelBase
     {
 
-        public Customer(
-            string email,
-            string phone,
-            string lastname,
-            string firstname,
-            string genre,
-            DateTime birthday,
-            string address,
-            string zipCode,
-            string city)
+        public Customer(string email, string phone, string lastname, string firstname, string genre, DateTime? birthday, string address, string zipCode, string city)
         {
             Email = email;
             Phone = phone;
@@ -50,10 +41,11 @@ namespace WebApplication.Models
 
         [DataType(DataType.Date)]
         [Column(TypeName = "Date")]
-        public DateTime Birthday { get; set; }
+        public DateTime? Birthday { get; set; }
         public string Address { get; set; }
         public string ZipCode { get; set; }
         public string City { get; set; }
+
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
@@ -68,10 +60,39 @@ namespace WebApplication.Models
             yield return this.City;
         }
 
-        //public static Result<Customer> Create()
-        //{
-            
-        //    return new Customer();
-        //}
+        public static Result<Customer> Create(
+            string email,
+            string phone,
+            string lastname,
+            string firstname,
+            string genre,
+            DateTime? birthday,
+            string address,
+            string zipCode,
+            string city)
+        {
+
+            //Guard.Against.NullOrEmpty(email, nameof(email));
+            //Guard.Against.NullOrEmpty(phone, nameof(phone));
+            //Guard.Against.NullOrEmpty(lastname, nameof(lastname));
+            //Guard.Against.NullOrEmpty(firstname, nameof(firstname));
+            //Guard.Against.NullOrEmpty(genre, nameof(genre));
+            //Guard.Against.OutOfSQLDateRange(birthday, nameof(birthday));
+            //Guard.Against.NullOrEmpty(address, nameof(address));
+            //Guard.Against.NullOrEmpty(zipCode, nameof(zipCode));
+            //Guard.Against.NullOrEmpty(city, nameof(city));
+
+            if ((email == "") || (email == null)) return Result.Failure<Customer>("Le champ Email est requis");
+            if ((phone == "") || (phone == null)) return Result.Failure<Customer>("Le champ Phone est requis");
+            if ((lastname == "") || (lastname == null)) return Result.Failure<Customer>("Le champ Lastname est requis");
+            if ((firstname == "") || (firstname == null)) return Result.Failure<Customer>("Le champ Firstname est requis");
+            if ((genre == "") || (genre == null)) return Result.Failure<Customer>("Le champ Genre est requis");
+            if ((address == "") || (address == null)) return Result.Failure<Customer>("Le champ Address est requis");
+            if ((zipCode == "") || (zipCode == null)) return Result.Failure<Customer>("Le champ ZipCode est requis");
+            if ((city == "") || (city == null)) return Result.Failure<Customer>("Le champ City est requis");
+            if (birthday == null) return Result.Failure<Customer>("Le champ Birthday est requis");
+
+            return Result.Success(new Customer(email, phone, lastname, firstname, genre, birthday, address, zipCode, city));
+        }
     }
 }
