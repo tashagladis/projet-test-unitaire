@@ -1,7 +1,9 @@
 using APILibrary.Test.Mock;
 using APILibrary.Test.Mock.Models;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -28,7 +30,7 @@ namespace APILibrary.Test
         public async Task TestGetAll()
         {
 
-            var actionResult = await _controller.GetAllAsync();
+            var actionResult = await _controller.GetAllAsync("","","");
             var result = actionResult.Result as ObjectResult;
             var values = ((IEnumerable<object>)(result).Value);
 
@@ -114,7 +116,7 @@ namespace APILibrary.Test
         {
 
             // Penser à Changer la valeur retounée de la DeleteItem
-            var actionResult = await _controller.DeleteItem(1);
+            var actionResult = await _controller.RemoveItem(1);
             var result = actionResult.Result as ObjectResult;
 
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
@@ -124,40 +126,43 @@ namespace APILibrary.Test
         [Test]
         public async Task TestSearch()
         {
+            var dictionary = new Dictionary<string, StringValues>();
+            dictionary.Add("lastname", new StringValues("Charles"));
+            _controller.Request.Query = new QueryCollection(dictionary);
 
 
-            var actionResult = await _controller.Search("*Charles*", "Homme", "");
+            var actionResult = await _controller.SearchAsync("lastname,firstname", "", "lastname");
             var result = actionResult.Result as ObjectResult;
 
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
 
         }
 
-        public async Task TestNotFoundSearch()
-        {
+        //public async Task TestNotFoundSearch()
+        //{
 
 
-            var actionResult = await _controller.Search("Charles", "Homme", "");
-            var result = actionResult.Result as ObjectResult;
+        //    var actionResult = await _controller.SearchAsync("Charles", "Homme", "");
+        //    var result = actionResult.Result as ObjectResult;
 
-            var okResult = result.Should().BeOfType<NotFoundResult>().Subject;
+        //    var okResult = result.Should().BeOfType<NotFoundResult>().Subject;
 
-        }
-
-
+        //}
 
 
-        [Test]
-        public async Task TestSort()
-        {
 
 
-            var actionResult = await _controller.Sort("", "lastname", "");
-            var result = actionResult.Result as ObjectResult;
+        //[Test]
+        //public async Task TestSort()
+        //{
 
-            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
 
-        }
+        //    var actionResult = await _controller.("", "lastname", "");
+        //    var result = actionResult.Result as ObjectResult;
+
+        //    var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+
+        //}
 
         //[Test]
         //public async Task TestSearch()

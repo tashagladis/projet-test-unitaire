@@ -15,7 +15,8 @@ namespace APILibrary.Test.Mock
 
         public static MockDbContext GetDbContext(bool withData = true)
         {
-            var options = new DbContextOptionsBuilder().UseInMemoryDatabase("dbtest").Options;
+            var options = new DbContextOptionsBuilder().UseInMemoryDatabase("dbtest")
+                .Options;
             var db = new MockDbContext(options);
 
             if (withData)

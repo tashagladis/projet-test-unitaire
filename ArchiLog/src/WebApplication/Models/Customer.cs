@@ -28,7 +28,7 @@ namespace WebApplication.Models
         //public int ID { get; set; }
         // rendre obligatoire l'élément en question
         // errormessage : pour personnaliser le message d'erreur
-        // [Required(ErrorMessage = "L'email est obligatoire.")]
+        [Required(ErrorMessage = "L'email est obligatoire.")]
         [NotJson]
         public string Email { get; set; }
         [Required]
