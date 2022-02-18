@@ -1,6 +1,5 @@
 ﻿using APILibrary.Core.Attributs;
 using APILibrary.Core.Models;
-using Ardalis.GuardClauses;
 using CSharpFunctionalExtensions;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ namespace WebApplication.Models
     public class Customer : ModelBase
     {
 
-        public Customer(string email,string phone,string lastname,string firstname,string genre,DateTime birthday,string address,string zipCode,string city)
+        public Customer(string email, string phone, string lastname, string firstname, string genre, DateTime? birthday, string address, string zipCode, string city)
         {
             Email = email;
             Phone = phone;
@@ -42,7 +41,7 @@ namespace WebApplication.Models
 
         [DataType(DataType.Date)]
         [Column(TypeName = "Date")]
-        public DateTime Birthday { get; set; }
+        public DateTime? Birthday { get; set; }
         public string Address { get; set; }
         public string ZipCode { get; set; }
         public string City { get; set; }
@@ -67,12 +66,12 @@ namespace WebApplication.Models
             string lastname,
             string firstname,
             string genre,
-            DateTime birthday,
+            DateTime? birthday,
             string address,
             string zipCode,
             string city)
         {
-           
+
             //Guard.Against.NullOrEmpty(email, nameof(email));
             //Guard.Against.NullOrEmpty(phone, nameof(phone));
             //Guard.Against.NullOrEmpty(lastname, nameof(lastname));
@@ -81,7 +80,7 @@ namespace WebApplication.Models
             //Guard.Against.OutOfSQLDateRange(birthday, nameof(birthday));
             //Guard.Against.NullOrEmpty(address, nameof(address));
             //Guard.Against.NullOrEmpty(zipCode, nameof(zipCode));
-            Guard.Against.NullOrEmpty(city, nameof(city));
+            //Guard.Against.NullOrEmpty(city, nameof(city));
 
             if ((email == "") || (email == null)) return Result.Failure<Customer>("Le champ Email est requis");
             if ((phone == "") || (phone == null)) return Result.Failure<Customer>("Le champ Phone est requis");
@@ -92,9 +91,6 @@ namespace WebApplication.Models
             if ((zipCode == "") || (zipCode == null)) return Result.Failure<Customer>("Le champ ZipCode est requis");
             if ((city == "") || (city == null)) return Result.Failure<Customer>("Le champ City est requis");
             if (birthday == null) return Result.Failure<Customer>("Le champ Birthday est requis");
-           
-            
-
 
             return Result.Success(new Customer(email, phone, lastname, firstname, genre, birthday, address, zipCode, city));
         }

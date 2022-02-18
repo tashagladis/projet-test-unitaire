@@ -55,7 +55,7 @@ namespace WebApp.XUnit.Test.TestModels
             Assert.True(resultCreateCustomerWithoutEmail.IsFailure);
             resultCreateCustomerWithoutEmail.Error.Should().Be("Le champ Email est requis");
         }
-        
+
         [Theory(DisplayName = "je ne peux pas créer un customer sans le champ Phone")]
         [InlineData("")]
         [InlineData(null)]
@@ -105,8 +105,8 @@ namespace WebApp.XUnit.Test.TestModels
             Assert.True(resultCreateCustomerWithoutLastname.IsFailure);
             resultCreateCustomerWithoutLastname.Error.Should().Be("Le champ Lastname est requis");
         }
-        
-        
+
+
         [Theory(DisplayName = "je ne peux pas créer un customer sans le champ Firstname")]
         [InlineData("")]
         [InlineData(null)]
@@ -130,6 +130,130 @@ namespace WebApp.XUnit.Test.TestModels
             //Assert
             Assert.True(resultCreateCustomerWithoutFirstname.IsFailure);
             resultCreateCustomerWithoutFirstname.Error.Should().Be("Le champ Firstname est requis");
+        }
+
+        [Theory(DisplayName = "je ne peux pas créer un customer sans le champ Genre")]
+        [InlineData("")]
+        [InlineData(null)]
+
+        public void on_ne_peut_pas_creer_un_customer_sans_les_champ_Genre(string genre)
+        {
+            //Arrange
+
+            //Act
+            var resultCreateCustomerWithoutGenre = Customer.Create(
+                 "test@gmail.com",
+                 "085412368",
+                 "test",
+                 "test",
+                 genre,
+                 DateTime.Now,
+                 "2 bd rue jean miche",
+                 "6854",
+                 "Limoges");
+
+            //Assert
+            Assert.True(resultCreateCustomerWithoutGenre.IsFailure);
+            resultCreateCustomerWithoutGenre.Error.Should().Be("Le champ Genre est requis");
+        }
+
+        [Theory(DisplayName = "je ne peux pas créer un customer sans le champ Address")]
+        [InlineData("")]
+        [InlineData(null)]
+
+        public void on_ne_peut_pas_creer_un_customer_sans_les_champ_Address(string address)
+        {
+            //Arrange
+
+            //Act
+            var resultCreateCustomerWithoutAddress = Customer.Create(
+                 "test@gmail.com",
+                 "085412368",
+                 "test",
+                 "test",
+                 "Femme",
+                 DateTime.Now,
+                 address,
+                 "6854",
+                 "Limoges");
+
+            //Assert
+            Assert.True(resultCreateCustomerWithoutAddress.IsFailure);
+            resultCreateCustomerWithoutAddress.Error.Should().Be("Le champ Address est requis");
+        }
+
+        [Theory(DisplayName = "je ne peux pas créer un customer sans le champ ZipCode")]
+        [InlineData("")]
+        [InlineData(null)]
+
+        public void on_ne_peut_pas_creer_un_customer_sans_les_champ_ZipCode(string zipCode)
+        {
+            //Arrange
+
+            //Act
+            var resultCreateCustomerWithoutZipCode = Customer.Create(
+                 "test@gmail.com",
+                 "085412368",
+                 "test",
+                 "test",
+                 "Femme",
+                 DateTime.Now,
+                 "2 bd rue jean miche",
+                 zipCode,
+                 "Limoges");
+
+            //Assert
+            Assert.True(resultCreateCustomerWithoutZipCode.IsFailure);
+            resultCreateCustomerWithoutZipCode.Error.Should().Be("Le champ ZipCode est requis");
+        }
+
+        [Theory(DisplayName = "je ne peux pas créer un customer sans le champ City")]
+        [InlineData("")]
+        [InlineData(null)]
+
+        public void on_ne_peut_pas_creer_un_customer_sans_les_champ_City(string city)
+        {
+            //Arrange
+
+            //Act
+            var resultCreateCustomerWithoutCity = Customer.Create(
+                 "test@gmail.com",
+                 "085412368",
+                 "test",
+                 "test",
+                 "Femme",
+                 DateTime.Now,
+                 "2 bd rue jean miche",
+                 "6854",
+                 city);
+
+            //Assert
+            Assert.True(resultCreateCustomerWithoutCity.IsFailure);
+            resultCreateCustomerWithoutCity.Error.Should().Be("Le champ City est requis");
+        }
+
+        [Theory(DisplayName = "je ne peux pas créer un customer sans le champ Birthday")]       
+        [InlineData(null)]
+
+        public void on_ne_peut_pas_creer_un_customer_sans_les_champ_Birthday(DateTime? birthday)
+        {
+            //Arrange
+
+            //Act
+            var resultCreateCustomerWithoutBirthday = Customer.Create(
+                 "test@gmail.com",
+                 "085412368",
+                 "test",
+                 "test",
+                 "Femme",
+                 birthday,
+                 "2 bd rue jean miche",
+                 "6854",
+                 "Limoges");
+
+            //Assert
+            Assert.True(resultCreateCustomerWithoutBirthday.IsFailure);
+            resultCreateCustomerWithoutBirthday.Error.Should().Be("Le champ Birthday est requis");
         }
     }
 }
