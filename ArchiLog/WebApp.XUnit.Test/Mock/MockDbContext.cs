@@ -70,6 +70,36 @@ namespace WebApp.XUnit.Test.Mock
                     "Limoges"
                 ));
 
+               db.Pizzas.Add(new PizzaMock
+               (
+                   "Pizza1",
+                   50, 
+                   "test", 
+                   DateTime.Now
+               ));
+
+                db.Pizzas.Add(new PizzaMock
+              (
+                  "Pizza2",
+                  20,
+                  "test",
+                  DateTime.Now
+              ));
+                db.Pizzas.Add(new PizzaMock
+              (
+                  "Pizza3",
+                  13,
+                  "test",
+                  DateTime.Now
+              ));
+                db.Pizzas.Add(new PizzaMock
+              (
+                  "Pizza4",
+                  14,
+                  "test",
+                  DateTime.Now
+              ));
+
 
                 db.SaveChanges();
             }
