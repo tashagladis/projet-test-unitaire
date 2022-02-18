@@ -1,8 +1,6 @@
 ﻿using APILibrary.Test.Mock.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using WebApplication.Data;
 
 namespace APILibrary.Test.Mock
