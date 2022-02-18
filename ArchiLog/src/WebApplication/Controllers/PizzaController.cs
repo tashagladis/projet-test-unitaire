@@ -1,4 +1,4 @@
-﻿using APILibrary.Core.Attributs.Controllers;
+﻿using APILibrary.Core.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Data;
 using WebApplication.Models;

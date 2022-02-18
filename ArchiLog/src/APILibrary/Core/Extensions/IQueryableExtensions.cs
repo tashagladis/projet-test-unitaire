@@ -1,17 +1,194 @@
 ﻿using APILibrary.Core.Attributs;
 using APILibrary.Core.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 
 namespace APILibrary.Core.Extensions
 {
     public static class IQueryableExtensions
     {
+        public static IQueryable<TModel> OrderByDynamic<TModel>(this IQueryable<TModel> query, string asc, string desc) where TModel : ModelBase
+        {
+            var collectionType = typeof(TModel);
+            ParameterExpression parametres = Expression.Parameter(collectionType, "x");
+
+            IOrderedQueryable<TModel> orderedQuery = null;
+
+            int indexAll = 0;
+            if (!string.IsNullOrEmpty(asc))
+            {
+                int indexAsc = 0;
+                var tabAsc = asc.Split(',');
+                foreach (var itemAsc in tabAsc)
+                {
+                    var propInModel = collectionType.GetProperty(itemAsc, BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.Instance);
+                    if (propInModel != null)
+                    {
+                        var property = Expression.Property(parametres, itemAsc);
+                        var body = Expression.Convert(property, typeof(object));
+                        var lambda = Expression.Lambda<Func<TModel, object>>(body, parametres);
+                        orderedQuery = (indexAsc == 0 && indexAll == 0) ? query.OrderBy(lambda) : orderedQuery.ThenBy(lambda);
+                    }
+                    indexAll++;
+                    indexAsc++;
+                }
+            }
+            if (!string.IsNullOrEmpty(desc))
+            {
+                int indexDesc = 0;
+                var tabDesc = desc.Split(',');
+                foreach (var itemDesc in tabDesc)
+                {
+                    var propInModel = collectionType.GetProperty(itemDesc, BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.Instance);
+                    if (propInModel != null)
+                    {
+                        var property = Expression.Property(parametres, itemDesc);
+                        var body = Expression.Convert(property, typeof(object));
+                        var lambda = Expression.Lambda<Func<TModel, object>>(body, parametres);
+                        orderedQuery = (indexDesc == 0 && indexAll == 0) ? query.OrderByDescending(lambda) : orderedQuery.ThenByDescending(lambda);
+                    }
+                    indexAll++;
+                    indexDesc++;
+                }
+            }
+            return orderedQuery == null ? query : orderedQuery;
+        }
+        public static IQueryable<T> TakePageResult<T>(this IQueryable<T> query, int pageFrom, int pageTo)
+        {
+            /*   if (query == null)
+               {
+                   throw new ArgumentNullException(nameof(query));
+               }
+
+               if (pageData == null)
+               {
+                   throw new ArgumentNullException(nameof(pageData));
+               }
+
+               if (pageData.PageNr <= 0)
+               {
+                   throw new ArgumentException(nameof(IPageQuery.PageNr) + " should be equal and greater than 1.");
+               }
+
+               if (pageData.PageSize <= 0)
+               {
+                   throw new ArgumentException("Invalid page size.");
+               }
+            */
+            return query.Skip(pageFrom + 1).Take(pageTo + 1);
+        }
+
+        public static IQueryable<TModel> WhereDynamic<TModel>(this IQueryable<TModel> query, IQueryCollection requestQuery, bool isSearch = false) where TModel : ModelBase
+        {
+            Expression<Func<TModel, bool>> allExpresions = null;
+
+            // prendre le type de TModel
+            var collectionType = typeof(TModel);
+            ParameterExpression parametres = Expression.Parameter(collectionType, "x");
+
+            // boucler les paramètres qu'on a reçu de l'url
+            foreach (var prop in requestQuery)
+            {
+                // voir si le paramètre existe dans le TModel
+                var propInTModel = collectionType.GetProperty(prop.Key, BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.Instance);
+                if (propInTModel != null)
+                {
+                    List<string> values = new List<string>();
+                    var propString = prop.Value.ToString();
+
+                    // check si la valeur du paramètre contient une virgule (signe de OU)
+                    var containsComma = propString.Contains(",");
+                    // check si la valeur du paramètre est entre 2 crochets
+                    var containsBrackets = propString.StartsWith("[") && propString.EndsWith("]");
+                    var containsAsterisks = propString.StartsWith("*") || propString.EndsWith("*");
+
+                    // si contient virgule, faire un split et ajouter les valeurs dans une liste de valeurs
+                    if (containsComma)
+                        values = propString.Split(",").ToList<string>();
+                    // si ne contient pas, ajouter la valeur dans une liste de valeurs (en élément 0)
+                    else
+                        values.Add(propString);
+                    // valeur pour comparaison final des valeurs (OU / ET)
+                    Expression<Func<TModel, bool>> expression = null;
+                    // boucle des valeurs dans la Liste de valeurs
+                    foreach (var val in values)
+                    {
+                        // get la valeur de VAL sans crochets
+                        var withoutBrackets = val.StartsWith("[") ? val.Substring(1) : val;
+                        withoutBrackets = withoutBrackets.EndsWith("]") ? withoutBrackets.Substring(0, withoutBrackets.Length - 1) : withoutBrackets;
+
+                        var withoutAsterisks = val.StartsWith("*") ? val.Substring(1) : val;
+                        withoutAsterisks = withoutAsterisks.EndsWith("*") ? withoutAsterisks.Substring(0, withoutAsterisks.Length - 1) : withoutAsterisks;
+                        // si la valeur n'est pas vide
+                        if (!string.IsNullOrEmpty(withoutBrackets) && !string.IsNullOrEmpty(withoutAsterisks))
+                        {
+                            // convertir en type de l'objet dans TModel
+                            var objet = TypeDescriptor.GetConverter(propInTModel.PropertyType).ConvertFromString(withoutBrackets);
+                            // comparateur de gauche (la valeur dans le model)
+                            Expression valueFromCol = Expression.PropertyOrField(parametres, prop.Key);
+                            // comparateur de droite (la valeur saisie par l'utilisateur)
+                            Expression valueToCompare = Expression.Constant(objet);
+                            // faire la comparaison // dans le cas où pas de crochets
+                            Expression makeComparaison = Expression.Equal(valueFromCol, valueToCompare);
+                            // s'il y a des crochets
+                            if (containsBrackets && !string.IsNullOrEmpty(withoutBrackets))
+                            {
+                                // si la valeur initiale commence par [ // supérieur ou égal
+                                if (val.StartsWith("["))
+                                    makeComparaison = Expression.GreaterThanOrEqual(valueFromCol, valueToCompare);
+                                // si la valeur initiale finit par [ // inférieur ou égal
+                                if (val.EndsWith("]"))
+                                    makeComparaison = Expression.LessThanOrEqual(valueFromCol, valueToCompare);
+                            }
+
+                            if (containsAsterisks && isSearch)
+                            {
+                                makeComparaison = Expression.Equal(
+                                    Expression.Call(valueFromCol, typeof(String).GetMethods()
+                                    .Where(x => x.Name == "Contains")
+                                    .FirstOrDefault(x => x.GetParameters().Length == 1), new Expression[] { Expression.Constant(withoutAsterisks) }),
+                                    Expression.Constant(true));
+                            }
+
+                            var sameExpression = Expression.Lambda<Func<TModel, bool>>(makeComparaison, parametres);
+                            // si la valeur de la comparaison final de VALUES est vide
+                            if (expression == null)
+                            {
+                                // assigner le result de la première expression
+                                expression = sameExpression;
+                            }
+                            // sinon
+                            else
+                            {
+                                // comparer l'expression finale à l'expression en cours
+                                BinaryExpression binSame = containsBrackets ? Expression.And(expression.Body, sameExpression.Body) : Expression.Or(expression.Body, sameExpression.Body);
+                                // puis assigner l'expression reçue à l'expression finale de VALUES
+                                expression = Expression.Lambda<Func<TModel, bool>>(binSame, parametres);
+                            }
+                        }
+                    }
+
+
+                    if (allExpresions == null)
+                    {
+                        allExpresions = expression;
+                    }
+                    else
+                    {
+                        BinaryExpression bin = Expression.And(allExpresions.Body, expression.Body);
+                        allExpresions = Expression.Lambda<Func<TModel, bool>>(bin, parametres);
+                    }
+                }
+            }
+            return allExpresions == null ? query : query.Where(allExpresions);
+        }
+
         public static object SelectObject(object value, string[] fields)
         {
             var expo = new ExpandoObject() as IDictionary<string, object>;
@@ -36,230 +213,25 @@ namespace APILibrary.Core.Extensions
             return expo;
         }
 
+        /*public static IQueryable<dynamic> SelectDynamic<TModel>(this IQueryable<TModel> query, string[] fields) where TModel : ModelBase
+           {
+               var parameter = Expression.Parameter(typeof(TModel), "x");
+               var membersExpression = fields.Select(y => Expression.Property(parameter, y));
+               var membersAssignment = membersExpression.Select(z => Expression.Bind(z.Member, z));
+               var body = Expression.MemberInit(Expression.New(typeof(TModel)), membersAssignment);
+               var lambda = Expression.Lambda<Func<TModel, dynamic>>(body, parameter);
+               return query.Select(lambda);
+           }*/
 
-
-        public static IQueryable<T> SelectModel<T>(this IQueryable<T> query, string[] fields) where T : ModelBase
+        public static IQueryable<TModel> SelectModel<TModel>(this IQueryable<TModel> query, string[] fields) where TModel : ModelBase
         {
-            var parameter = Expression.Parameter(typeof(T), "x");
-            // Recuperer les parametres de T
-
+            var parameter = Expression.Parameter(typeof(TModel), "x");
             var membersExpression = fields.Select(y => Expression.Property(parameter, y));
-            // On selectionne les paramtres de de fiedls present dans T
-
             var membersAssignment = membersExpression.Select(z => Expression.Bind(z.Member, z));
-            //On assigne ses parametres comme des membres
-
-            var body = Expression.MemberInit(Expression.New(typeof(T)), membersAssignment);
-            // créé un T et lui assigne des membres
-
-            var lambda = Expression.Lambda<Func<T, T>>(body, parameter);
-
-            return query.Select(lambda);
-
-            // cette liste renvoi une liste de colonnes fields et les autres colonnes apparaissent aussi avec la valeur null
-        }
-
-        public static IQueryable<dynamic> SelectDynamic<T>(this IQueryable<T> query, string[] fields) where T : ModelBase
-        {
-            var parameter = Expression.Parameter(typeof(T), "x");
-
-            var membersExpression = fields.Select(y => Expression.Property(parameter, y));
-
-            var membersAssignment = membersExpression.Select(z => Expression.Bind(z.Member, z));
-
-            var body = Expression.MemberInit(Expression.New(typeof(T)), membersAssignment);
-
-            var lambda = Expression.Lambda<Func<T, dynamic>>(body, parameter);
-
+            var body = Expression.MemberInit(Expression.New(typeof(TModel)), membersAssignment);
+            var lambda = Expression.Lambda<Func<TModel, TModel>>(body, parameter);
             return query.Select(lambda);
         }
-
-
-        public static IQueryable<T> SelectColonnesAsc<T>(IQueryable<T> query, string[] field) where T : ModelBase
-        {
-
-            //lamba 2
-            var parameter = Expression.Parameter(typeof(T));
-            var property = Expression.Property(parameter, field[0]);
-            // Créer une propriétée
-            var body = Expression.Convert(property, typeof(object));
-
-            var lambda = Expression.Lambda<Func<T, object>>(body, parameter);
-
-            // on créé la lambda2 pour la deuxième colonne du tableau
-            var parameter2 = Expression.Parameter(typeof(T));
-            var property2 = Expression.Property(parameter2, field[1]);
-            var body2 = Expression.Convert(property2, typeof(object));
-
-            var lambda2 = Expression.Lambda<Func<T, object>>(body2, parameter2);
-
-
-            return query.OrderBy(lambda).ThenBy(lambda2);
-            // thenBy Pour la deuxième colonne
-
-
-
-
-        }
-
-        public static IQueryable<T> SelectColonnesAscOne<T>(IQueryable<T> query, string field) where T : ModelBase
-        {
-
-            //lamba 2
-            var parameter = Expression.Parameter(typeof(T));
-            var property = Expression.Property(parameter, field);
-            // Créer une propriétée
-            var body = Expression.Convert(property, typeof(object));
-
-            var lambda = Expression.Lambda<Func<T, object>>(body, parameter);
-
-
-
-            return query.OrderBy(lambda);
-            // thenBy Pour la deuxième colonne
-
-
-
-
-        }
-
-
-
-        public static IQueryable<T> SelectColonnesDesc<T>(IQueryable<T> query, string[] field) where T : ModelBase
-        {
-
-            //lambda1
-            var parameter = Expression.Parameter(typeof(T));
-            var property = Expression.Property(parameter, field[0]);
-            var body = Expression.Convert(property, typeof(object));
-
-            var lambda = Expression.Lambda<Func<T, object>>(body, parameter);
-
-            // on créé la lambda2 pour  
-            var parameter2 = Expression.Parameter(typeof(T));
-            var property2 = Expression.Property(parameter, field[1]);
-            var body2 = Expression.Convert(property2, typeof(object));
-
-            var lambda2 = Expression.Lambda<Func<T, object>>(body2, parameter2);
-
-            // appel de mes deux lambdas
-
-            return query.OrderByDescending(lambda).ThenBy(lambda2);
-            //thenBy Pour la deuxième colonne
-
-
-        }
-
-        public static IQueryable<T> SelectColonnesDescOne<T>(IQueryable<T> query, string field) where T : ModelBase
-        {
-
-            //lambda1
-            var parameter = Expression.Parameter(typeof(T));
-            var property = Expression.Property(parameter, field);
-            var body = Expression.Convert(property, typeof(object));
-
-            var lambda = Expression.Lambda<Func<T, object>>(body, parameter);
-
-            
-
-            // appel de mes deux lambdas
-
-            return query.OrderByDescending(lambda);
-            //thenBy Pour la deuxième colonne
-
-
-        }
-
-
-        public static IQueryable<T> SelectColonnesName<T>(IQueryable<T> query, string field, string value) where T : ModelBase
-        {
-            //J'extrait ma chaine de caractère pour vérifier pour testé sa valeur
-                  var valueOut = value.StartsWith("*") ? value.Substring(1) : value;
-                  valueOut = valueOut.EndsWith("*") ? valueOut.Substring(0, valueOut.Length - 1) : valueOut;
-                //: value.EndsWith("*") ? value.Substring(0, value.Length - 1)
-                 //var valueOut = value.Replace("*", "");
-
-                 var parameter = Expression.Parameter(typeof(T));
-                // Accéder a la propriété de type field
-                var property = Expression.Property(parameter, field);
-                Expression val = Expression.Constant(valueOut);
-                //transformer la valeur value en Expression
-               // var body = Expression.Equal(property, val);
-
-                var body = Expression.Equal(Expression.Call(property, typeof(String).GetMethods()
-                    .Where(x => x.Name == "Contains")
-                                     .FirstOrDefault(x=> x.GetParameters().Length == 1),
-                    new Expression[] { val }),  Expression.Constant(true));
-
-            // On appel la méthode contains on lui passe val pour vérifier si notre colonne property contient un élément avec val
-            //ensuite on vérifie si le resultat de notre Expression.call est égale a true
-            
-
-            var lambda = Expression.Lambda<Func<T, bool>>(body, parameter);
-                return query.Where(lambda);
-
-        }
-
-        public static IQueryable<T> SelectColonnesGender<T>(IQueryable<T> query, string field, string[] value) where T : ModelBase
-        {
-
-            // lambada 1
-            var parameter = Expression.Parameter(typeof(T));
-            var property = Expression.Property(parameter, field);
-            // Accéder a la propriété de type field
-
-
-            // Expression PropOb = Expression.Convert(property, typeof(object));
-
-            Expression val = Expression.Constant(value[0]);
-            //transformer la valeur value en Expression
-
-            var body = Expression.Equal(property, val);
-
-
-            // lambada 2
-            var property2 = Expression.Property(parameter, field);
-            // Accéder a la propriété de type field
-
-            // Expression PropOb = Expression.Convert(property, typeof(object));
-
-            Expression val2 = Expression.Constant(value[1]);
-            //transformer la valeur value en Expression
-
-            var body2 = Expression.Equal(property2, val2);
-
-
-            //Recupère le resultat de nos deux expressions lambda
-            BinaryExpression bodies = Expression.Or(body,body2);
-
-            var lambdaAll = Expression.Lambda<Func<T, bool>>(bodies, parameter);
-
-            return query.Where(lambdaAll);
-
-
-        }
-
-        public static IQueryable<T> SelectColonnesGenderOne<T>(IQueryable<T> query, string field, string value) where T : ModelBase
-        {
-
-            // lambada 1
-            var parameter = Expression.Parameter(typeof(T));
-            var property = Expression.Property(parameter, field);
-            // Accéder a la propriété de type field
-
-            // Expression PropOb = Expression.Convert(property, typeof(object));
-
-            Expression val = Expression.Constant(value);
-            //transformer la valeur value en Expression
-
-            var body = Expression.Equal(property, val);
-
-            var lambdaAll = Expression.Lambda<Func<T, bool>>(body, parameter);
-
-            return query.Where(lambdaAll);
-
-
-        }
-
     }
+
 }
