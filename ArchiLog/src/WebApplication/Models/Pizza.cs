@@ -9,22 +9,22 @@ namespace WebApplication.Models
 {
     public class Pizza : ModelBase
     {
-        public Pizza(string name, decimal price, string topping, DateTime dateCreation)
+        public Pizza(string name, decimal? price, string topping, DateTime? dateCreation)
         {
             Name = name;
             Price = price;
             Topping = topping;
-            DateCreation = dateCreation;
+            DateCreation = DateTime.Now;
         }
 
 
         //[Key]
         public string Name { get; set; }
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
         public string Topping { get; set; }
         [DataType(DataType.Date)]
         [Column(TypeName = "Date")]
-        public DateTime DateCreation { get; set; }
+        public DateTime? DateCreation { get; set; }
 
 
         protected override IEnumerable<object> GetEqualityComponents()
@@ -36,9 +36,14 @@ namespace WebApplication.Models
 
         }
 
-        //public static Result<Pizza> Create()
-        //{
-        //    return new Pizza();
-        //}
+        public static Result<Pizza> Create(string name, decimal? price, string topping, DateTime? dateCreation)
+        {
+            if ((name == "") || (name == null)) return Result.Failure<Pizza>("Le champ Name est requis");
+            if ((topping == "") || (topping == null)) return Result.Failure<Pizza>("Le champ Topping est requis");
+            if ((price <= 0) || (price == null)) return Result.Failure<Pizza>("Le champ Price est requis");
+            if ((dateCreation == null)) return Result.Failure<Pizza>("Le champ DateCreation est requis");
+
+            return Result.Success(new Pizza(name, price, topping, dateCreation));
+        }
     }
 }
