@@ -78,7 +78,7 @@ namespace WebApp.XUnit.Test
             var actionResult = await _controller.CreateItem(pizza);
             var result = actionResult.Result as ObjectResult;
 
-            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var okResult = result.Should().BeOfType<CreatedResult>().Subject;
 
         }
 
@@ -86,7 +86,7 @@ namespace WebApp.XUnit.Test
         public async Task TestDelete()
         {
             // Penser à Changer la valeur retounée de la DeleteItem
-            var actionResult = await _controller.DeleteItem(1);
+            var actionResult = await _controller.RemoveItem(1);
             var result = actionResult.Result as ObjectResult;
 
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;

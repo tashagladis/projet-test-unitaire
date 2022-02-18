@@ -1,7 +1,6 @@
-using System;
-using System.Text;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,9 +8,6 @@ using WebApp.XUnit.Test.Mock;
 using WebApp.XUnit.Test.Mock.Models;
 using WebApplication.Controllers;
 using Xunit;
-using System.Dynamic;
-using System.Reflection;
-using APILibrary.Core.Attributs;
 
 namespace WebApp.XUnit.Test
 {
