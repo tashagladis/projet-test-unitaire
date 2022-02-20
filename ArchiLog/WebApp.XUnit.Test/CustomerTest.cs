@@ -11,6 +11,7 @@ using Xunit;
 
 namespace WebApp.XUnit.Test
 {
+    [Trait("Opération sur customer", "")]
     public class CustomerTest
     {
         private MockDbContext _db;
@@ -22,8 +23,8 @@ namespace WebApp.XUnit.Test
             _controller = new CustomerController(_db);
         }
 
-        [Fact]
-        public async Task TestGetAll()
+        [Fact(DisplayName = "Je peux recuperer tous les customers")]
+        public async Task Je_peux_recuperer_tous_les_customers()
         {
             var actionResult = await _controller.GetAllAsync("", "", "");
             var result = actionResult.Result as ObjectResult;
@@ -35,8 +36,8 @@ namespace WebApp.XUnit.Test
         }
 
 
-        [Fact]
-        public async Task TestGetBYId()
+        [Fact(DisplayName = "Je peux recuperer un customer")]
+        public async Task Je_peux_recuperer_un_customer()
         {
 
             var actionResult = await _controller.GetById(2, "");
@@ -46,8 +47,8 @@ namespace WebApp.XUnit.Test
 
         }
 
-        [Fact]
-        public async Task TestPut()
+        [Fact(DisplayName = "Je peux modifier un customer")]
+        public async Task Je_peux_modifier_un_customer()
         {
             CustomerMock customer = new CustomerMock
             (
@@ -68,8 +69,8 @@ namespace WebApp.XUnit.Test
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
         }
 
-        [Fact]
-        public async Task TestCreate()
+        [Fact(DisplayName = "Je peux creer un customer")]
+        public async Task Je_peux_creer_un_customer()
         {
             CustomerMock customer = new CustomerMock
             (
@@ -91,8 +92,8 @@ namespace WebApp.XUnit.Test
 
         }
 
-        [Fact]
-        public async Task TestDelete()
+        [Fact(DisplayName = "Je peux supprimer un customer")]
+        public async Task Je_peux_supprimer_un_customer()
         {
             // Penser à Changer la valeur retounée de la DeleteItem
             var actionResult = await _controller.RemoveItem(1);
@@ -102,35 +103,139 @@ namespace WebApp.XUnit.Test
 
         }
 
-        //[Fact]
-        //public async Task TestSearch()
+
+        //[Fact(DisplayName = "Je peux pas creer un customer avec le champ phone invalide")]
+        //public async Task Je_peux_pas_creer_un_customer_avec_le_champ_phone_invalide()
         //{
-        //    var actionResult = await _controller.Search("*Charles*", "Homme", "");
+        //    CustomerMock customer = new CustomerMock
+        //   (
+        //      "AliAhmadr@yahoo.fr",
+        //       "",
+        //       "Maria",
+        //       "Julia",
+        //       "Autres",
+        //       DateTime.Now,
+        //       null,
+        //       "6854",
+        //       "Limoges"
+        //   );
+
+        //    var actionResult = await _controller.CreateItem(customer);
         //    var result = actionResult.Result as ObjectResult;
 
-        //    var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        //    var okResult = result.Should().BeOfType<BadRequestObjectResult>().Subject;
 
         //}
 
-        //[Fact]
-        //public async Task TestNotFoundSearch()
-        //{
-        //    var actionResult = await _controller.Search("Charles", "Homme", "");
-        //    var result = actionResult.Result as ObjectResult;
+        [Fact(DisplayName = "Je peux pas creer un customer sans email")]
+        public async Task Je_peux_pas_creer_un_customer_sans_email()
+        {
+            CustomerMock customer = new CustomerMock
+           (
+               null,
+               "654218951541",
+               "Maria",
+               "Julia",
+               "Autres",
+               DateTime.Now,
+               null,
+               "6854",
+               "Limoges"
+           );
 
-        //    var okResult = result.Should().BeOfType<NotFoundObjectResult>().Subject;
+            var actionResult = await _controller.CreateItem(customer);
+            var result = actionResult.Result as ObjectResult;
 
-        //}
+            var okResult = result.Should().BeOfType<BadRequestObjectResult>().Subject;
 
+        }
 
-        //[Fact]
-        //public async Task TestSort()
-        //{
-        //    var actionResult = await _controller.Sort("", "lastname", "");
-        //    var result = actionResult.Result as ObjectResult;
+        [Fact(DisplayName = "Je peux pas modifier un customer avec un id inexistant")]
+        public async Task Je_peux_pas_modifier_un_customer_avec_un_id_inexistant()
+        {
+            CustomerMock customer = new CustomerMock
+            (
+                "AliAhmadr@yahoo.fr",
+                "65421895154",
+                "Fouret",
+                "Jeanne",
+                "Autres",
+                DateTime.Now,
+                null,
+                "6854",
+                "Limoges"
+            );
+            customer.ID = 120;
+            var actionResult = await _controller.UpdateItem(120, customer);
+            var result = actionResult.Result as ObjectResult;
 
-        //    var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var okResult = result.Should().BeOfType<NotFoundObjectResult>().Subject;
+        }
 
-        //}
+        [Fact(DisplayName = "Je peux pas modifier un customer avec un id different")]
+        public async Task Je_peux_pas_modifier_un_customer_avec_un_id_different()
+        {
+            CustomerMock customer = new CustomerMock
+            (
+                "AliAhmadr@yahoo.fr",
+                "65421895154",
+                "Fouret",
+                "Jeanne",
+                "Autres",
+                DateTime.Now,
+                null,
+                "6854",
+                "Limoges"
+            );
+            customer.ID = 2;
+            var actionResult = await _controller.UpdateItem(3, customer);
+            var result = actionResult.Result as ObjectResult;
+
+            var okResult = result.Should().BeOfType<BadRequestObjectResult>().Subject;
+        }
+
+        [Fact(DisplayName = "Je peux pas supprimer un customer")]
+        public async Task Je_peux_pas_supprimer_un_customer()
+        {
+            var actionResult = await _controller.RemoveItem(120);
+            var result = actionResult.Result as ObjectResult;
+
+            var okResult = result.Should().BeOfType<NotFoundObjectResult>().Subject;
+
+        }
+
+        [Fact(DisplayName = "Je peux recuperer un customer avec fields")]
+        public async Task Je_peux_recuperer_un_customer_avec_fields()
+        {
+
+            var actionResult = await _controller.GetById(2, "genre");
+            var result = actionResult.Result as ObjectResult;
+
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+
+        }
+
+        [Fact(DisplayName = "Je peux pas recuperer un customer avec fields")]
+        public async Task Je_peux_pas_recuperer_un_customer_avec_fields()
+        {
+
+            var actionResult = await _controller.GetById(120, "genre");
+            var result = actionResult.Result as ObjectResult;
+
+            var okResult = result.Should().BeOfType<NotFoundObjectResult>().Subject;
+
+        }
+
+        [Fact(DisplayName = "Je peux pas recuperer un customer inexistant")]
+        public async Task Je_peux_pas_recuperer_un_customer_inexistant()
+        {
+
+            var actionResult = await _controller.GetById(120, "");
+            var result = actionResult.Result as ObjectResult;
+
+            var okResult = result.Should().BeOfType<NotFoundObjectResult>().Subject;
+
+        }
+
     }
 }

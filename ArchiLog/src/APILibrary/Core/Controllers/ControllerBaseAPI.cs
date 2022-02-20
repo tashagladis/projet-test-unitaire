@@ -148,10 +148,17 @@ namespace APILibrary.Core.Controllers
         {
             if (ModelState.IsValid)
             {
+                try 
+                {
+                    _context.Add(item);
+                    await _context.SaveChangesAsync();
+                    return Created("", ToJson(item));
 
-                _context.Add(item);
-                await _context.SaveChangesAsync();
-                return Created("", ToJson(item));
+                }catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+                
             }
             else
             {
@@ -168,27 +175,31 @@ namespace APILibrary.Core.Controllers
         {
             if (id != item.ID)
             {
-                return BadRequest();
-            }
-
-            TModel itemShouldExist = _context.Set<TModel>().AsNoTracking().FirstOrDefault(e => e.ID == id);
-            if (itemShouldExist == null)
-            {
-                return NotFound();
+                return BadRequest(item);
             }
             else
             {
-                itemShouldExist = item;
-            }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-                return Ok(ToJson(item));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(new { e.Message });
+                TModel itemShouldExist = _context.Set<TModel>().AsNoTracking().FirstOrDefault(e => e.ID == id);
+                if (itemShouldExist != null && itemShouldExist.ID == id)
+                {
+                    itemShouldExist = item;
+                   
+                }
+                else
+                {
+                    return NotFound(item);
+                }
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(ToJson(item));
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(new { e.Message });
+                }
             }
         }
 
@@ -199,7 +210,7 @@ namespace APILibrary.Core.Controllers
         {
             TModel item = await _context.Set<TModel>().FindAsync(id);
             if (item == null)
-                return NotFound();
+                return NotFound(item);
             _context.Remove<TModel>(item);
             try
             {
