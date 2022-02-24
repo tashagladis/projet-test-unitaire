@@ -80,7 +80,19 @@ Grâce au TDD, c’est au code de s’adapter aux tests, en travaillant de mani�
 
 ![image](https://user-images.githubusercontent.com/69635011/155516305-1624a4bc-8fdb-4748-b1c1-251c8804ac54.png)
 
-```diff
-! Le mutation testing, ou comment tester ses tests
-```
+
+6- Le mutation testing, ou comment tester ses tests :
+=====
+
+Le principe est très simple. Il s’agit de rendre le code “malade” à l’aide de mutations et d’observer la capacité de nos tests à diagnostiquer l’anomalie introduite.
+
+Les mutations appliquées au code peuvent être de différentes formes comme :
+
+- la modification de la valeur d’une constante,
+- le remplacement d’opérateurs,
+- la suppression d’instructions,
+et encore bien d’autres !
+
+Si les tests restent au vert malgré les mutations du code, alors ils ne suffisent pas à détecter la régression amenée par le mutant.
+On parle dans ce cas de mutations survivantes. A l’inverse, si au moins un test passe au rouge lors de l'exécution d’un code muté, alors la mutation est dite tuée (sous entendu par le test).
 
