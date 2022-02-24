@@ -192,8 +192,8 @@ namespace WebApp.XUnit.Test
 
         }
 
-        [Fact(DisplayName = "Je peux pas recuperer un customer avec fields")]
-        public async Task Je_peux_pas_recuperer_un_customer_avec_fields()
+        [Fact(DisplayName = "Je peux pas recuperer un customer inexistant avec fields")]
+        public async Task Je_peux_pas_recuperer_un_customer_inexistant_avec_fields()
         {
 
             var actionResult = await _controller.GetById(120, "genre");
