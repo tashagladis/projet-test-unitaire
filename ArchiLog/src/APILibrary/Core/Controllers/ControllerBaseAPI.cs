@@ -28,9 +28,16 @@ namespace APILibrary.Core.Controllers
 
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [HttpGet("search")]
-        public virtual async Task<ActionResult<IEnumerable<dynamic>>> SearchAsync([FromQuery] string fields, [FromQuery] string asc, [FromQuery] string desc)
+        public virtual async Task<ActionResult<IEnumerable<dynamic>>> SearchAsync([FromQuery] string fields = "", [FromQuery] string asc = "", [FromQuery] string desc = "", IQueryCollection requestQuery = null)
         {
-            IQueryCollection requestQuery = Request.Query;
+            try
+            {
+                requestQuery = Request.Query;
+            }
+            catch (Exception ex)
+            {
+
+            }
 
             var query = _context.Set<TModel>().AsQueryable();
 
@@ -147,17 +154,18 @@ namespace APILibrary.Core.Controllers
         {
             if (ModelState.IsValid)
             {
-                try 
+                try
                 {
                     _context.Add(item);
                     await _context.SaveChangesAsync();
                     return Created("", ToJson(item));
 
-                }catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     return BadRequest(ex.Message);
                 }
-                
+
             }
             else
             {
@@ -183,7 +191,7 @@ namespace APILibrary.Core.Controllers
                 if (itemShouldExist != null && itemShouldExist.ID == id)
                 {
                     itemShouldExist = item;
-                   
+
                 }
                 else
                 {

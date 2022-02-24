@@ -72,6 +72,64 @@ namespace WebApp.XUnit.Test
         }
 
         [Fact]
+        public async Task Je_peux_faire_une_recherche_normale()
+        {
+            var query2 = new QueryCollection(new Dictionary<string, StringValues>()
+            {
+                { "name", "Pizza*" }
+            });
+            var actionResult = await _controller.SearchAsync("", "", "", query2);
+            var result = actionResult.Result as ObjectResult;
+            var values = result?.Value as IEnumerable<object>;
+
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        }
+
+        [Fact]
+        public async Task Je_peux_faire_une_recherche_avec_tri()
+        {
+            var query2 = new QueryCollection(new Dictionary<string, StringValues>()
+            {
+                { "name", "Pizza*" }
+            });
+            var actionResult = await _controller.SearchAsync("", "price", "name", query2);
+            var result = actionResult.Result as ObjectResult;
+            var values = result?.Value as IEnumerable<object>;
+
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        }
+
+        [Fact]
+        public async Task Je_peux_faire_une_recherche_avec_des_filtres()
+        {
+            var query2 = new QueryCollection(new Dictionary<string, StringValues>()
+            {
+                { "name", "Pizza*" },
+                {"topping", "test" }
+            });
+            var actionResult = await _controller.SearchAsync("", "", "", query2);
+            var result = actionResult.Result as ObjectResult;
+            var values = result?.Value as IEnumerable<object>;
+
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        }
+
+        [Fact]
+        public async Task Je_peux_faire_une_recherche_avec_un_rendu_partiel()
+        {
+            var query2 = new QueryCollection(new Dictionary<string, StringValues>()
+            {
+                { "name", "Pizza*" },
+                {"topping", "test" }
+            });
+            var actionResult = await _controller.SearchAsync("name", "", "", query2);
+            var result = actionResult.Result as ObjectResult;
+            var values = result?.Value as IEnumerable<object>;
+
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        }
+
+        [Fact]
         public async Task TestGetBYId()
         {
             var actionResult = await _controller.GetById(2, "");
