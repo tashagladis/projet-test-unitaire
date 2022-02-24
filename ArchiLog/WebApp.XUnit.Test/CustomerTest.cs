@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WebApp.XUnit.Test.Mock;
 using WebApp.XUnit.Test.Mock.Models;
 using WebApplication.Controllers;
+using WebApplication.Models;
 using Xunit;
 
 namespace WebApp.XUnit.Test
@@ -102,29 +103,6 @@ namespace WebApp.XUnit.Test
 
         }
 
-
-        //[Fact(DisplayName = "Je peux pas creer un customer avec le champ phone invalide")]
-        //public async Task Je_peux_pas_creer_un_customer_avec_le_champ_phone_invalide()
-        //{
-        //    CustomerMock customer = new CustomerMock
-        //   (
-        //      "AliAhmadr@yahoo.fr",
-        //       "",
-        //       "Maria",
-        //       "Julia",
-        //       "Autres",
-        //       DateTime.Now,
-        //       null,
-        //       "6854",
-        //       "Limoges"
-        //   );
-
-        //    var actionResult = await _controller.CreateItem(customer);
-        //    var result = actionResult.Result as ObjectResult;
-
-        //    var okResult = result.Should().BeOfType<BadRequestObjectResult>().Subject;
-
-        //}
 
         [Fact(DisplayName = "Je peux pas creer un customer sans email")]
         public async Task Je_peux_pas_creer_un_customer_sans_email()
@@ -235,6 +213,33 @@ namespace WebApp.XUnit.Test
             var okResult = result.Should().BeOfType<NotFoundObjectResult>().Subject;
 
         }
+
+        //public class Calculator
+        //{
+        //    public int Add(int value1, int value2)
+        //    {
+        //        return value1 + value2;
+        //    }
+        //}
+
+        //[Theory]
+        //[InlineData(1, 2, 3)]
+        //[InlineData(-4, -6, -10)]
+        //[InlineData(-2, 2, 0)]
+        //[InlineData(int.MinValue, -1, int.MaxValue)]
+        //public void Add_SumOfNumbers_True(int value1, int value2, int expected)
+        //{
+        //    //Arrange
+        //    var calculator = new Calculator();
+
+
+        //    //Act
+        //    var result = calculator.Add(value1, value2);
+
+
+        //    //Assert
+        //    Assert.Equal(expected, result);
+        //}
 
     }
 }
