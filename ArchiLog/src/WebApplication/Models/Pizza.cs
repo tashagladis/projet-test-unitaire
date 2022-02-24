@@ -9,6 +9,11 @@ namespace WebApplication.Models
 {
     public class Pizza : ModelBase
     {
+        public Pizza()
+        {
+
+        }
+
         public Pizza(string name, decimal? price, string topping, DateTime? dateCreation)
         {
             Name = name;
