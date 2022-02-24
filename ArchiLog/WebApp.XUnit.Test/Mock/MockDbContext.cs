@@ -18,88 +18,15 @@ namespace WebApp.XUnit.Test.Mock
 
             if (withData)
             {
-                db.Customers.Add(new CustomerMock
-                (
-                    "AliAhmadr@yahoo.fr",
-                    "65421895154",
-                    "Charles",
-                    "Clementine",
-                    "Homme",
-                    DateTime.Now,
-                    null,
-                    "6854",
-                    "Limoges"
-                ));
+                db.Customers.Add(new CustomerMock("AliAhmadr@yahoo.fr", "65421895154", "Charles", "Clementine", "Homme", DateTime.Now, null, "6854", "Limoges"));
+                db.Customers.Add(new CustomerMock("AliAhmadr@yahoo.fr", "65421895154", "Charles", "Zan", "Homme", DateTime.Now, null, "6854", "Limoges"));
+                db.Customers.Add(new CustomerMock("AliAhmadr@yahoo.fr", "65421895154", "Kaly", "Moli", "Femme", DateTime.Now, null, "6854", "Limoges"));
+                db.Customers.Add(new CustomerMock("AliAhmadr@yahoo.fr", "65421895154", "Charles", "Jeep", "Femme", DateTime.Now, null, "6854", "Limoges"));
 
-                db.Customers.Add(new CustomerMock
-                (
-                    "AliAhmadr@yahoo.fr",
-                    "65421895154",
-                    "Charles",
-                    "Zan",
-                    "Homme",
-                    DateTime.Now,
-                    null,
-                    "6854",
-                    "Limoges"
-                ));
-
-                db.Customers.Add(new CustomerMock
-                (
-                     "AliAhmadr@yahoo.fr",
-                     "65421895154",
-                     "Kaly",
-                     "Moli",
-                     "Femme",
-                     DateTime.Now,
-                     null,
-                     "6854",
-                     "Limoges"
-               ));
-
-                db.Customers.Add(new CustomerMock
-                (
-                    "AliAhmadr@yahoo.fr",
-                    "65421895154",
-                    "Charles",
-                    "Jeep",
-                    "Femme",
-                    DateTime.Now,
-                    null,
-                    "6854",
-                    "Limoges"
-                ));
-
-               db.Pizzas.Add(new PizzaMock
-               (
-                   "Pizza1",
-                   50, 
-                   "test", 
-                   DateTime.Now
-               ));
-
-                db.Pizzas.Add(new PizzaMock
-              (
-                  "Pizza2",
-                  20,
-                  "test",
-                  DateTime.Now
-              ));
-                db.Pizzas.Add(new PizzaMock
-              (
-                  "Pizza3",
-                  13,
-                  "test",
-                  DateTime.Now
-              ));
-                db.Pizzas.Add(new PizzaMock
-              (
-                  "Pizza4",
-                  14,
-                  "test",
-                  DateTime.Now
-              ));
-
+                db.Pizzas.Add(new PizzaMock("Pizza1", 50, "test", DateTime.Now));
+                db.Pizzas.Add(new PizzaMock("Pizza2", 20, "test", DateTime.Now));
+                db.Pizzas.Add(new PizzaMock("Pizza3", 13, "test", DateTime.Now));
+                db.Pizzas.Add(new PizzaMock("Pizza4", 14, "test", DateTime.Now));
 
                 db.SaveChanges();
             }
