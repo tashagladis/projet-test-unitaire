@@ -27,14 +27,14 @@ namespace WebApplication.Models
         public DateTime? DateCreation { get; set; }
 
 
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return this.Name;
-            yield return this.Price;
-            yield return this.Topping;
-            yield return this.DateCreation;
+        //protected override IEnumerable<object> GetEqualityComponents()
+        //{
+        //    yield return this.Name;
+        //    yield return this.Price;
+        //    yield return this.Topping;
+        //    yield return this.DateCreation;
 
-        }
+        //}
 
         public static Result<Pizza> Create(string name, decimal? price, string topping, DateTime? dateCreation)
         {

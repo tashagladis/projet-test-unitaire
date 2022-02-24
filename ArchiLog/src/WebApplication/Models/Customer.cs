@@ -47,18 +47,18 @@ namespace WebApplication.Models
         public string City { get; set; }
 
 
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return this.Email;
-            yield return this.Phone;
-            yield return this.Lastname;
-            yield return this.Firstname;
-            yield return this.Genre;
-            yield return this.Birthday;
-            yield return this.Address;
-            yield return this.ZipCode;
-            yield return this.City;
-        }
+        //protected override IEnumerable<object> GetEqualityComponents()
+        //{
+        //    yield return this.Email;
+        //    yield return this.Phone;
+        //    yield return this.Lastname;
+        //    yield return this.Firstname;
+        //    yield return this.Genre;
+        //    yield return this.Birthday;
+        //    yield return this.Address;
+        //    yield return this.ZipCode;
+        //    yield return this.City;
+        //}
 
         public static Result<Customer> Create(
             string email,
@@ -71,16 +71,6 @@ namespace WebApplication.Models
             string zipCode,
             string city)
         {
-
-            //Guard.Against.NullOrEmpty(email, nameof(email));
-            //Guard.Against.NullOrEmpty(phone, nameof(phone));
-            //Guard.Against.NullOrEmpty(lastname, nameof(lastname));
-            //Guard.Against.NullOrEmpty(firstname, nameof(firstname));
-            //Guard.Against.NullOrEmpty(genre, nameof(genre));
-            //Guard.Against.OutOfSQLDateRange(birthday, nameof(birthday));
-            //Guard.Against.NullOrEmpty(address, nameof(address));
-            //Guard.Against.NullOrEmpty(zipCode, nameof(zipCode));
-            //Guard.Against.NullOrEmpty(city, nameof(city));
 
             if ((email == "") || (email == null)) return Result.Failure<Customer>("Le champ Email est requis");
             if ((phone == "") || (phone == null)) return Result.Failure<Customer>("Le champ Phone est requis");

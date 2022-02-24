@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WebApplication.Models
 {
-    public class Order : ValueObject
+    public class Order //: ValueObject
     {
         readonly Customer customer;
         readonly Pizza[] pizza;
@@ -30,10 +30,10 @@ namespace WebApplication.Models
             return new Order(customer, pizza);
         }
 
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return this.customer;
-            yield return this.pizza;
-        }
+        //protected override IEnumerable<object> GetEqualityComponents()
+        //{
+        //    yield return this.customer;
+        //    yield return this.pizza;
+        //}
     }
 }
