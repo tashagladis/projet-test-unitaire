@@ -157,7 +157,7 @@ namespace WebApp.XUnit.Test
         }
 
         [Fact]
-        public async Task TestCreate()
+        public async Task Je_peux_creer_une_pizza()
         {
             PizzaMock pizza = new PizzaMock
             (
@@ -169,9 +169,24 @@ namespace WebApp.XUnit.Test
 
             var actionResult = await _controller.CreateItem(pizza);
             var result = actionResult.Result as ObjectResult;
-
             var okResult = result.Should().BeOfType<CreatedResult>().Subject;
+        }
 
+        [Fact]
+        public async Task Je_ne_peux_pas_creer_une_pizza_si_le_modele_est_invalide()
+        {
+            PizzaMock pizza = new PizzaMock
+            (
+                "Pizza5",
+                 23,
+                 "test",
+                 DateTime.Now
+             );
+
+            _controller.ModelState.AddModelError("name", "Erreur");
+            var actionResult = await _controller.CreateItem(pizza);
+            var result = actionResult.Result as ObjectResult;
+            var okResult = result.Should().BeOfType<BadRequestObjectResult>().Subject;
         }
 
         [Fact]
