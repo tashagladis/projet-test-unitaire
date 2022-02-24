@@ -37,9 +37,9 @@ Grâce au TDD, c’est au code de s’adapter aux tests, en travaillant de mani�
 **3- Les tests unitaires sur les règles métier :**
 =====
 
-Les règles métier c'est quelque chose de très imortant dans un projet, que nous devons centraliser dans un seul endroit.
+Les règles métier c'est quelque chose de très important dans un projet, que nous devons centraliser dans un seul endroit.
 
-Afin d'assurer que personne ne peut violer ces règles métier il est également important de les tester une par une.
+Afin de s'assurer que personne ne peut violer ces règles métier il est également important de les tester une par une.
 
 Notre projet se compose d'une entité Order qui comporte deux champs Customer et Pizza.
 
