@@ -13,7 +13,7 @@ using Xunit;
 
 namespace WebApp.XUnit.Test
 {
-
+    [Trait("Opération sur Pizza", "")]
     public class PizzaTest
     {
         private MockDbContext _db;
@@ -25,8 +25,8 @@ namespace WebApp.XUnit.Test
             _controller = new PizzaController(_db);
         }
 
-        [Fact]
-        public async Task Je_peux_faire_un_getallasync()
+        [Fact(DisplayName = "Je peux recuperer toutes les pizzas")]
+        public async Task Je_peux_recuperer_toutes_les_pizzas()
         {
             var actionResult = await _controller.GetAllAsync("", "", "");
             var result = actionResult.Result as ObjectResult;
@@ -36,8 +36,8 @@ namespace WebApp.XUnit.Test
             var correctNumber = values?.Count().Should().Be(_db.Pizzas.Count());
         }
 
-        [Fact]
-        public async Task Je_peux_faire_un_getallasync_avec_tri_asc_et_desc()
+        [Fact(DisplayName = "Je peux recuperer toutes les pizzas avec des tris ASC et DESC")]
+        public async Task Je_peux_recuperer_toutes_les_pizzas_avec_tri_asc_et_desc()
         {
             var actionResult = await _controller.GetAllAsync("", "price", "name");
             var result = actionResult.Result as ObjectResult;
@@ -46,8 +46,8 @@ namespace WebApp.XUnit.Test
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
         }
 
-        [Fact]
-        public async Task Je_peux_faire_un_getallasync_avec_des_filtres()
+        [Fact(DisplayName = "Je peux recuperer toutes les pizzas avec des filtres")]
+        public async Task Je_peux_recuperer_toutes_les_pizzas_avec_des_filtres()
         {
             var query2 = new QueryCollection(new Dictionary<string, StringValues>()
             {
@@ -61,8 +61,8 @@ namespace WebApp.XUnit.Test
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
         }
 
-        [Fact]
-        public async Task Je_peux_faire_un_getallasync_avec_rendu_partiel()
+        [Fact(DisplayName = "Je peux recuperer toutes les pizzas avec un rendu partiel des champs")]
+        public async Task Je_peux_recuperer_toutes_les_pizzas_avec_rendu_partiel()
         {
             var actionResult = await _controller.GetAllAsync("name");
             var result = actionResult.Result as ObjectResult;
@@ -71,7 +71,7 @@ namespace WebApp.XUnit.Test
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
         }
 
-        [Fact]
+        [Fact(DisplayName = "Je peux faire une recherche de pizzas")]
         public async Task Je_peux_faire_une_recherche_normale()
         {
             var query2 = new QueryCollection(new Dictionary<string, StringValues>()
@@ -85,8 +85,8 @@ namespace WebApp.XUnit.Test
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
         }
 
-        [Fact]
-        public async Task Je_peux_faire_une_recherche_avec_tri()
+        [Fact(DisplayName = "Je peux faire une recherche de pizzas avec un tri ASC et DESC")]
+        public async Task Je_peux_faire_une_recherche_avec_tri_asc_et_desc()
         {
             var query2 = new QueryCollection(new Dictionary<string, StringValues>()
             {
@@ -99,7 +99,7 @@ namespace WebApp.XUnit.Test
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
         }
 
-        [Fact]
+        [Fact(DisplayName = "Je peux faire une recherche de pizzas avec des filtres")]
         public async Task Je_peux_faire_une_recherche_avec_des_filtres()
         {
             var query2 = new QueryCollection(new Dictionary<string, StringValues>()
@@ -114,7 +114,7 @@ namespace WebApp.XUnit.Test
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
         }
 
-        [Fact]
+        [Fact(DisplayName = "Je peux faire une recherche de pizzas avec un rendu partiel des champs")]
         public async Task Je_peux_faire_une_recherche_avec_un_rendu_partiel()
         {
             var query2 = new QueryCollection(new Dictionary<string, StringValues>()
@@ -129,8 +129,8 @@ namespace WebApp.XUnit.Test
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
         }
 
-        [Fact]
-        public async Task TestGetBYId()
+        [Fact(DisplayName = "Je peux faire récupérer une pizza par son ID")]
+        public async Task Je_peux_recuperer_une_seule_pizza()
         {
             var actionResult = await _controller.GetById(2, "");
             var result = actionResult.Result as ObjectResult;
@@ -138,8 +138,8 @@ namespace WebApp.XUnit.Test
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
         }
 
-        [Fact]
-        public async Task TestPut()
+        [Fact(DisplayName = "Je peux mettre à jour une pizza")]
+        public async Task Je_peux_mettre_a_jour_une_pizza()
         {
             PizzaMock pizza = new PizzaMock
             (
@@ -156,7 +156,7 @@ namespace WebApp.XUnit.Test
 
         }
 
-        [Fact]
+        [Fact(DisplayName = "Je peux créer une pizza")]
         public async Task Je_peux_creer_une_pizza()
         {
             PizzaMock pizza = new PizzaMock
@@ -172,7 +172,7 @@ namespace WebApp.XUnit.Test
             var okResult = result.Should().BeOfType<CreatedResult>().Subject;
         }
 
-        [Fact]
+        [Fact(DisplayName = "Je ne peux pas créer une pizza si le modele est invalide")]
         public async Task Je_ne_peux_pas_creer_une_pizza_si_le_modele_est_invalide()
         {
             PizzaMock pizza = new PizzaMock
@@ -189,7 +189,7 @@ namespace WebApp.XUnit.Test
             var okResult = result.Should().BeOfType<BadRequestObjectResult>().Subject;
         }
 
-        [Fact]
+        [Fact(DisplayName = "Je peux supprimer une pizza")]
         public async Task TestDelete()
         {
             // Penser à Changer la valeur retounée de la DeleteItem
@@ -197,7 +197,6 @@ namespace WebApp.XUnit.Test
             var result = actionResult.Result as ObjectResult;
 
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-
         }
     }
 }
