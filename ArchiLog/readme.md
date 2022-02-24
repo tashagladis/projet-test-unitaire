@@ -49,7 +49,7 @@ Order :
 - Customer
 - Pizza
 
-Avant d'effectuer des tests sur la classe Order, on s'assure d'abord que les deux champs qui la composent sont bien testés
+Avant d'effectuer des tests sur la classe Order, on s'assure d'abord que les deux champs qui la composent sont bien testés.
 Par conséquent, nous avons testé les deux classes Customer et Pizza séparément, tout ça afin de créer une classe Order sur de bonnes bases !
 
 ```diff
