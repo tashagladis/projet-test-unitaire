@@ -10,6 +10,10 @@ namespace WebApplication.Models
 {
     public class Customer : ModelBase
     {
+        public Customer()
+        {
+
+        }
 
         public Customer(string email, string phone, string lastname, string firstname, string genre, DateTime? birthday, string address, string zipCode, string city)
         {
@@ -32,6 +36,7 @@ namespace WebApplication.Models
         [NotJson]
         public string Email { get; set; }
         [Required]
+        [Range(1, 15)]
         public string Phone { get; set; }
         [Required]
         public string Lastname { get; set; }
