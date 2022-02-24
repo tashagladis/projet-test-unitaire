@@ -62,9 +62,8 @@ namespace APILibrary.Core.Controllers
 
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [HttpGet]
-        public virtual async Task<ActionResult<IEnumerable<dynamic>>> GetAllAsync([FromQuery] string fields="", [FromQuery] string asc = "", [FromQuery] string desc = "")
+        public virtual async Task<ActionResult<IEnumerable<dynamic>>> GetAllAsync([FromQuery] string fields = "", [FromQuery] string asc = "", [FromQuery] string desc = "", IQueryCollection requestQuery = null)
         {
-            IQueryCollection requestQuery = null;
             try
             {
                 requestQuery = Request.Query;

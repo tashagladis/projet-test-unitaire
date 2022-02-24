@@ -30,8 +30,7 @@ namespace WebApp.XUnit.Test
             var values = result?.Value as IEnumerable<object>;
 
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-
-            _db.Customers.Count().Should().Be(values?.Count());
+            var correctNumber = values?.Count().Should().Be(_db.Customers.Count());
         }
 
 
